@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>🎙️ Transcriber App</title>
+  <link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+  <h1>🎙️ Transcriber App</h1>
+
+  <div id="global-controls" class="card">
+    <button id="global-play" disabled>▶️ Play All</button>
+    <button id="global-pause" disabled>⏸️ Pause</button>
+    <audio id="audio" controls preload="auto"></audio>
+      <!-- New: playback speed selector -->
+   <label for="speed-select">Speed:</label>
+   <select id="speed-select">
+     <option value="0.5">0.5×</option>
+     <option value="0.75">0.75×</option>
+     <option value="1" selected>1×</option>
+     <option value="1.25">1.25×</option>
+     <option value="1.5">1.5×</option>
+     <option value="2">2×</option>
+   </select>
+  </div>
+
+  <form id="upload-form" class="card">
+    <input type="file" name="audio" accept=".mp3,.wav,.m4a,.mp4,.mov,.avi" required/>
+
+    <details id="advanced-features">
+      <summary>⚙️ Settings</summary>
+
+      <!-- Diarization Toggle + Hidden Field -->
+      <label class="toggle">
+        <input type="checkbox" id="enable-diarization" checked/>
+        <span class="slider"></span>
+        Enable speaker diarization
+      </label>
+      <input type="hidden" id="hidden-diarizer" name="diarizer" value="none"/>
+
+      <!-- Speaker Count (only shown when diarization on) -->
+      <div id="speaker-settings" class="field">
+        <label for="speakers-select">Speakers</label>
+        <select id="speakers-select" name="num_speakers"></select>
+      </div>
+
+      <!-- Speed vs Accuracy -->
+      <fieldset class="segmented-control">
+        <legend>Prioritise</legend>
+        <input type="radio" name="engine" id="mode-speed"  value="" />
+        <label for="mode-speed">Speed</label>
+        <input type="radio" name="engine" id="mode-accuracy" value="" checked/>
+        <label for="mode-accuracy">Accuracy</label>
+      </fieldset>
+
+      <!-- Compute Resources -->
+      <div class="field">
+        <label>Compute resource</label>
+        <div class="button-group">
+          <button type="button" class="resources-btn" data-percent="25">25%</button>
+          <button type="button" class="resources-btn" data-percent="50">50%</button>
+          <button type="button" class="resources-btn" data-percent="75">75%</button>
+          <button type="button" class="resources-btn" data-percent="100">100%</button>
+        </div>
+        <input type="hidden" id="hidden-cores" name="cores" value=""/>
+      </div>
+    </details>
+
+    <!-- Metadata -->
+    <div id="guest-names"></div>
+    <input type="text"   name="title"          placeholder="Title"/>
+    <input type="date"   name="broadcast_date"/>
+    <input type="text"   name="subtitle"       placeholder="Subtitle"/>
+    <input type="text"   name="image"          placeholder="Image URL or file"/>
+    <input type="text"   name="tags"           placeholder="Tags (comma-separated)"/>
+    <input type="text"   name="backlinks"      placeholder="Backlinks"/>
+    <input type="text"   name="image_alt_text" placeholder="Image Alt Text"/>
+    <label>
+      <input type="checkbox" name="use_defaults"/>
+      Use image/tags/backlinks/alt-text as defaults
+    </label>
+
+    <!-- Actions -->
+    <button type="submit">Upload</button>
+    <button id="stop-btn" type="button">🛑 Stop Server</button>
+  </form>
+
+  <!-- Progress -->
+  <div id="progress-container" class="card">
+    <label for="progress-bar">Overall Progress:</label>
+    <progress id="progress-bar" max="100" value="0"></progress>
+    <div id="progress">
+      <div>Normalization:  <span id="norm-icon">⏳</span></div>
+      <div>Chunking:       <span id="chunk-icon">⏳</span></div>
+      <div id="diar-progress">Diarization:    <span id="diar-icon">⏳</span></div>
+      <div>Transcription:  <span id="trans-icon">⏳</span></div>
+      <div>Finishing:      <span id="fin-icon">⏳</span></div>
+    </div>
+  </div>
+
+  <!-- Transcript + Save -->
+  <div id="transcript" contenteditable="true" class="card"></div>
+  <div id="export-controls" style="margin-top:1em;">
+    <label for="export-select">Export as:</label>
+    <select id="export-select">
+      <option value="script">Script (txt)</option>
+      <option value="csv-formatted">CSV (with formatting)</option>
+      <option value="csv-plain">CSV (plain text)</option>
+    </select>
+    <button id="export-btn" type="button">Export</button>
+  </div>
+  <script src="/script.js"></script>
+</body>
+</html>
