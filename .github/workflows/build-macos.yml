@@ -4,14 +4,14 @@ name: Build macOS App
 
 on:
   push:
+    branches:
+      - main          # run on pushes to main
     tags:
-      - 'v*'              # builds run on any tag like v1.0-mac
+      - 'v*'          # and on tags like v1.0-mac
 
 jobs:
   build:
     runs-on: macos-latest
-
-    # If you fetch private HF models, add HF_TOKEN in your repo's Secrets
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
 
@@ -19,14 +19,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Cache Python packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: Install dependencies & download models
+      - name: Install dependencies
         run: |
-          pip install --no-cache-dir pyinstaller gdown huggingface-hub requests
+          pip install --upgrade pip
+          pip install --no-cache-dir -r requirements.txt
+
+      - name: Download models & build
+        run: |
           chmod +x build-macos.sh
           ./build-macos.sh
 
@@ -35,4 +47,3 @@ jobs:
         with:
           name: TranscriberApp-mac
           path: TranscriberApp-mac.zip
-
