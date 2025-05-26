@@ -1,0 +1,37 @@
+# .github/workflows/build-macos.yml
+
+name: Build macOS App
+
+on:
+  push:
+    tags:
+      - 'v*'              # builds run on any tag like v1.0-mac
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    # If you fetch private HF models, add HF_TOKEN in your repo's Secrets
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies & download models
+        run: |
+          pip install --no-cache-dir pyinstaller gdown huggingface-hub requests
+          chmod +x build-macos.sh
+          ./build-macos.sh
+
+      - name: Upload macOS .app artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: TranscriberApp-mac
+          path: TranscriberApp-mac.zip
