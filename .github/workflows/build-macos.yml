@@ -4,10 +4,8 @@ name: Build macOS App
 
 on:
   push:
-    branches:
-      - main          # run on pushes to main
-    tags:
-      - 'v*'          # and on tags like v1.0-mac
+    branches: [ main ]
+    tags: [ 'v*' ]
 
 jobs:
   build:
@@ -16,19 +14,16 @@ jobs:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Cache Python packages
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          restore-keys: ${{ runner.os }}-pip-
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
@@ -43,7 +38,7 @@ jobs:
           ./build-macos.sh
 
       - name: Upload macOS .app artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v2.3.1
         with:
           name: TranscriberApp-mac
           path: TranscriberApp-mac.zip
