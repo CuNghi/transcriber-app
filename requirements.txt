@@ -1,23 +1,28 @@
 # Web framework
-Flask>=2.0.0
-werkzeug>=2.0.0
+Flask>=2.0.0              # for the HTTP server and routes (app.py) :contentReference[oaicite:0]{index=0}
+werkzeug>=2.0.0           # for secure_filename (app.py) :contentReference[oaicite:1]{index=1}
 
-# FFmpeg wrapper
-ffmpeg-python>=0.2.0
+# Core ML frameworks
+torch>=1.10.0             # for GPU/CPU tensor compute (app.py) :contentReference[oaicite:2]{index=2}
+pyannote-audio>=2.3.0     # for diarization plugins (plugin code)  
+speechbrain>=0.5.12       # for speaker‐recognition plugin  
+ctranslate2>=2.20.0       # inference backend for Faster Whisper  
+onnxruntime>=1.15.0       # ONNX support for some models  
+lightning-fabric>=0.10.0  # for PyTorch Lightning hooks  
 
-# Core AI frameworks
-pyannote-audio>=2.3.0
-faster-whisper>=0.0.8
-speechbrain>=0.5.12
-ctranslate2>=2.20.0
-onnxruntime>=1.15.0
-lightning-fabric>=0.10.0
+# Whisper‐based transcription
+faster-whisper>=0.0.8     # the main transcription engine (plugins)  
+
+# Audio I/O & splitting
+ffmpeg-python>=0.2.0      # wrapper over FFmpeg for normalization & chunking :contentReference[oaicite:3]{index=3}
 
 # Packaging & bundling
-pyinstaller>=5.11.0
-gdown>=4.6.5
+pyinstaller>=5.11.0        # to build the `.app`/`.exe` bundles  
+gdown>=4.6.5               # to fetch Drive-hosted model folder  
 
 # Model downloads
-huggingface-hub>=0.16.4
-requests>=2.31.0
-wget>=3.2
+huggingface-hub>=0.16.4    # snapshot_download for HF models  
+requests>=2.31.0           # for HTTP pulls (custom.py, Whisper weights)  
+
+# Optional CLI downloader
+wget>=3.2                  # if you prefer wget in scripts  
