@@ -5,24 +5,23 @@ name: Build macOS App
 on:
   push:
     tags:
-      - 'v*'          # Triggers on any tag like v1.0-mac
+      - 'v*'
 
 jobs:
   build:
     runs-on: macos-latest
     env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}   # only needed if you pull private HF models
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: Install dependencies & build .app
+      - name: Install & build
         run: |
           pip install --upgrade pip
           pip install --no-cache-dir -r requirements.txt
@@ -30,7 +29,7 @@ jobs:
           ./build-macos.sh
 
       - name: Upload macOS .app artifact
-        uses: actions/upload-artifact@v3.1.1
+        uses: actions/upload-artifact@v3.0.0
         with:
           name: TranscriberApp-mac
           path: TranscriberApp-mac.zip
