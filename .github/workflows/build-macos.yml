@@ -14,14 +14,15 @@ jobs:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: Install & build
+      - name: Install dependencies & build
         run: |
           pip install --upgrade pip
           pip install --no-cache-dir -r requirements.txt
@@ -29,7 +30,7 @@ jobs:
           ./build-macos.sh
 
       - name: Upload macOS .app artifact
-        uses: actions/upload-artifact@v3.0.0
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: TranscriberApp-mac
           path: TranscriberApp-mac.zip
